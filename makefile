@@ -4,7 +4,7 @@ LDFLAGS= -lm
 CC= gcc
 
 run: main
-	./main script
+	./main random
 
 all: $(OBJECTS)
 	$(CC) -o main $(OBJECTS) $(LDFLAGS)

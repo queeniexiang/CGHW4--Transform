@@ -3,10 +3,10 @@
 #include <string.h>
 
 #include "ml6.h"
-#include "display.h"
+#include "display.c"
 #include "draw.c"
 #include "matrix.c"
-#include "parser.h"
+#include "parser.c"
 
 int main(int argc, char **argv) {
 

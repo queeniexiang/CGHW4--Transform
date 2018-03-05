@@ -65,7 +65,8 @@ void parse_file ( char * filename,
     f = stdin;
   else
     f = fopen(filename, "r");
-  
+
+  struct matrix * temp; 
   while ( fgets(line, 255, f) != NULL ) {
     line[strlen(line)-1]='\0';
     printf(":%s:\n",line);
@@ -84,12 +85,12 @@ void parse_file ( char * filename,
     }
 
     //IDENT
-    if (! strcmp(line, "ident")) {
+    else if (! strcmp(line, "ident")) {
       ident(transform);
     }
 
     //SCALE
-    if (! strcmp(line, "scale")) {
+    else if (! strcmp(line, "scale")) {
       //Grabs next line of scaling values
       fgets(line, 255, f);
 
@@ -98,14 +99,13 @@ void parse_file ( char * filename,
       sscanf(line, "%lf %lf %lf", &sx, &sy, &sz);
 
       
-      struct matrix * temp;
       temp = make_scale(sx, sy, sz);
       matrix_mult(temp, transform);
-      free_matrix(temp);
+      //free_matrix(temp);
     }
 
     //TRANSLATE
-    if (! strcmp(line, "translate")) {
+    else if (! strcmp(line, "move")) {
       //Grabs next line of translate values
       fgets(line, 255, f);
 
@@ -113,55 +113,57 @@ void parse_file ( char * filename,
       double tx, ty, tz;
       sscanf(line, "%lf %lf %lf", &tx, &ty, &tz);
 
-      
-      struct matrix * temp;
+     
       temp = make_translate(tx, ty, tz);
       matrix_mult(temp, transform);
-      free_matrix(temp);
+      //free_matrix(temp);
     }
 
     
     //ROTATE
-    if (! strcmp(line, "rotate")) {
+    else if (! strcmp(line, "rotate")) {
+      //printf("Rotating\n"); 
+      //printf("Grabbing\n"); 
       //Grabs next line of rotate values
       fgets(line, 255, f);
 
-      //Creates temporary matrix 
-      struct matrix * temp; 
-
+      //printf("Storing\n"); 
       //Stores axis and theta values into variables
       char axis[1]; 
       double theta;
-      sscanf(line, "%s %lf", &axis, &theta);
+
+      sscanf(line, "%s %lf", axis, &theta);
+      //printf("axis: %s\n", axis);
+      //printf("theta: %lf\n", theta); 
 
       //If rotating about the x axis
-      if (! strcmp(axis, "x")) {
+      if (axis[0] == 'x') {
+	//printf("x\n"); 
 	temp = make_rotX(theta);
-	matrix_mult(temp, transform);
       }
 
       //If rotating about the y axis
-      if (! strcmp(axis, "y")) {
+      else if (axis[0] == 'y') {
+	//printf("y\n"); 
 	temp = make_rotY(theta);
-	matrix_mult(temp, transform);
       }
 
       //If rotating about the z axis
-      if (! strcmp(axis, "z")) {
+      else if (axis[0] == 'z') {
+	//printf("z\n"); 
 	temp = make_rotZ(theta);
-	matrix_mult(temp, transform);
       }
-
-      free(temp);
+      matrix_mult(temp, transform);
+      //free_matrix(temp);
     }
 
     //APPLY
-    if (! strcmp(line, "apply")) {
+    else if (! strcmp(line, "apply")) {
       matrix_mult(transform, edges);
     }
 
     //DISPLAY
-    if (! strcmp(line, "display")) {
+    else if (! strcmp(line, "display")) {
 
       //Clears screen 
       clear_screen(s);
@@ -180,7 +182,7 @@ void parse_file ( char * filename,
     }
 
     //SAVE
-    if (! strcmp(line, "save")) {
+    else if (! strcmp(line, "save")) {
       //Grabs name of the file 
       fgets(line, 255, f);
 
@@ -201,7 +203,8 @@ void parse_file ( char * filename,
     }
 
     //QUIT
-    if (! strcmp(line, "quit")) {
+    else if (! strcmp(line, "quit")) {
+      free_matrix(temp);
       exit(0); 
     }  
       

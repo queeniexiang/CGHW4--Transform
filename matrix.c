@@ -92,6 +92,7 @@ Returns: The rotation matrix created using theta as the
 angle of rotation and Z as the axis of rotation.
 ====================*/
 struct matrix * make_rotZ(double theta) {
+  //printf("running rotz\n"); 
   struct matrix * transform = new_matrix(4, 4);
   ident(transform);
 
